@@ -1,3 +1,4 @@
+###  I have used kickstart.nvim here. And then added the plugins for my writing perposes.
 # kickstart.nvim
 
 ## Introduction
