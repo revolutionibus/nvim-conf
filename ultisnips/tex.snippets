@@ -1,0 +1,1120 @@
+global !p
+
+def math():
+    return vim.eval('vimtex#syntax#in_mathzone()') == '1'
+
+def comment(): 
+    return vim.eval('vimtex#syntax#in_comment()') == '1'
+
+def env(name):
+    [x,y] = vim.eval("vimtex#env#is_inside('" + name + "')") 
+    return x != '0' and x != '0'
+
+def fix_indent(snip):
+    vim.eval('feedkeys("\<c-f>")') 
+
+
+
+#keywords1 = { 'a' : '\\alpha',   'b' : '\\beta',   'c' : '\\chi',   'g' : '\\gamma', 'd' : '\\delta', 'e' : '\\epsilon', 'z' : '\\zeta',   't' : '\\theta', 'i' : '\\iota', 'k' : '\\kappa',   'l' : '\\lambda', 's' : '\\sigma', 'o' : '\\omega',  'p' : '\\psi',  'r' : '\\rho',  'x' : '\\xi', 'A' : '\\Alpha',   'B' : '\\Beta',   'C' : '\\Chi',   'G' : '\\Gamma', 'D' : '\\Delta', 'E' : '\\Epsilon', 'Z' : '\\Zeta',   'T' : '\\Theta', 'I' : '\\Iota', 'K' : '\\Kappa', 'L' : '\\Lambda', 'S' : '\\Sigma', 'O' : '\\Omega', 'P' : '\\Psi',  'R' : '\\Rho', 'X' : '\\Xi'}
+
+#keywords2 = { 't' : '\\tau', 'p' : '\\pi', 'f' : '\\phi' , 'm' : '\\mu', 'n' : '\\nu', 'e' : '\\eta' , 'T' : '\\Tau', 'P' : '\\Pi', 'F' : '\\Phi', 'M' : '\\Mu', 'N' : '\\Nu', 'E' : '\\Eta'}
+
+endglobal
+
+
+######################################################################
+
+#context "math()"
+#snippet ";([a,b,c,g,d,e,z,t,i,k,l,s,o,p,r,x,A,B,C,G,D,E,Z,T,I,K,L,S,O,P,R,X])" "Greek Letters 1" rAm
+#`!p snip.rv = keywords1[match.group(1)]`
+#endsnippet
+
+######################################################################
+
+#context "math()"
+#snippet "'([t,p,f,m,n,e,T,P,F,M,N,E])" "Greek Letters 2" rAm
+#`!p snip.rv = keywords2[match.group(1)]`
+#endsnippet
+
+######################################################################
+
+
+snippet notes "creates a template to take notes" bm
+% !TEX program = xelatex
+
+\documentclass[12pt]{report}
+\usepackage{amsmath,amsfonts,amsthm,amssymb,mathtools}
+\usepackage{physics}
+\usepackage{hyperref}
+\usepackage{graphicx}
+\usepackage{cite}
+
+
+\usepackage[a4paper, scale=0.9]{geometry}
+
+\title{\Huge{${1:title}}}
+\author{\textit{${2:Author}}}
+\date{${3:Date}}
+
+\begin{document}
+
+\maketitle
+
+
+\newpage
+\begin{thebibliography}{99}
+
+
+
+\end{thebibliography}
+\end{document}
+endsnippet
+
+#####################################################################
+
+#####################################################################
+
+snippet pack "creates a usepackage command" bAm
+\usepackage{${1:package_name}}
+endsnippet
+
+######################################################################
+
+#post_expand "fix_indent(snip)"
+snippet beg "begin environment" m
+\begin{$1}
+$2
+\end{$1}
+$0
+endsnippet
+
+######################################################################
+
+priority 100
+snippet ... "ldots" iA
+\ldots
+endsnippet
+#########################################################3
+post_expand "fix_indent(snip)"
+snippet chap "create a chapter dialogue" bma
+\textcolor{${1:Sepia}}{\chapter{$2}}
+$0
+endsnippet
+
+
+######################################################################
+
+#post_expand "fix_indent(snip)"
+snippet sec "create a section dialogue" bma
+\section{$1}
+$0
+endsnippet
+
+######################################################################
+
+#post_expand "fix_indent(snip)"
+snippet subs "create a subsection dialogue" bmwA
+\subsection{$1}
+$0
+endsnippet
+
+######################################################################
+
+#post_expand "fix_indent(snip)"
+snippet ssubs "create a subsubsection dialogue" bmwA
+\textcolor{${1:Sepia}}{\subsubsection{$2}}
+$0
+endsnippet
+
+######################################################################
+
+snippet == "equals" iA
+&= $1 \\\\
+endsnippet
+#########################################################
+snippet lbl "create a label dialogue" bm
+\label{$1}
+$0
+endsnippet
+#############################################################
+context "math()"
+snippet tt "text" iA
+\text{$1}$0
+endsnippet
+######################################################################
+
+#context "math()"
+snippet im "create an inline math environment" wmi
+${ $1 }$`!p
+if t[2] and t[2][0] not in [',', '.', '?', '-', ' ']:
+    snip.rv = ' '
+else:
+    snip.rv = ""
+	`$2
+endsnippet
+
+######################################################################
+
+snippet dm "creates a display math environment" wmi
+
+\[ 
+${1:${VISUAL}}
+\] 
+$0
+endsnippet
+
+######################################################################
+
+snippet ali "creates a display math environment" wmi
+
+\begin{align${1:*}}
+	$2
+\end{align$1}
+$0
+endsnippet
+
+######################################################################
+
+snippet ml "multiline environment" mA
+
+\begin{${1:multiline}}
+$2
+\end{$1}
+$0
+endsnippet
+
+######################################################################
+
+#context "math()"
+#snippet = "automatically use aligned equations" mA
+#&= $0
+#endsnippet
+
+######################################################################
+
+context "math()"
+snippet ^ "superscript" Ami
+^{$1}$0
+endsnippet
+
+######################################################################
+
+context "math()"
+snippet _ "subscript" Ami
+_{$1}$0
+endsnippet
+
+######################################################################
+
+
+
+######################################################################
+
+context "math()"
+snippet ket "Ket" wmiA
+\ket{$1}$0
+endsnippet
+
+######################################################################
+
+context "math()"
+snippet bra "Bra" wmiA
+\bra{$1}$0
+endsnippet
+
+######################################################################
+
+
+
+
+context "math()"
+snippet outerp "Outer Product" wmiA
+\dyad{$1}{$0}
+endsnippet
+
+######################################################################
+
+
+######################################################################
+
+context "math()"
+snippet bk "Braket : by default both of the values are same, if not change it" wmiA
+\braket{$1}{${2:$1}}$0
+endsnippet
+
+
+
+
+######################################################################
+
+context "math()"
+snippet mel "Matrix Element" wmiA
+\matrixel{$1}{$2}{$3}$4 
+endsnippet
+
+######################################################################
+
+context "math()"
+snippet dag "dagger" miA
+\dagger
+endsnippet
+
+######################################################################
+
+snippet bibi "create a bibitem label" bmA
+\bibitem{${1:cite_key}} $0
+endsnippet
+
+######################################################################
+
+snippet cite "citation" Am
+\cite{${1:cite_key}}$0
+endsnippet
+
+######################################################################
+
+context "math()"
+snippet text "text environment" imA
+\textnormal{$1}$0
+endsnippet
+
+######################################################################
+context "math()"
+snippet qty "appropriate bracket" miA
+\qty${1:($2 )}$0 
+endsnippet
+####################################################################################################
+
+snippet tbf "bold face text" wimA
+\textbf{$1} $0
+endsnippet
+
+######################################################################
+
+snippet txit "italic text" wimA
+\textit{$1} $0
+endsnippet
+
+######################################################################
+
+snippet ul "underline" wm
+\underline{$1}$0
+endsnippet
+
+######################################################################
+
+snippet noin "no indent" bAm
+\noindent
+$0
+endsnippet
+
+######################################################################
+
+snippet ( "adds ) to (" imA
+($1)$0 
+endsnippet
+
+######################################################################
+
+snippet [ "adds ] to [" imA
+[$1]$0
+endsnippet
+
+######################################################################
+
+snippet { "adds } to {" imA
+{$1}$0
+endsnippet
+
+######################################################################
+
+context "math()"
+snippet mcal "mathcal environment" imA
+\mathcal{$1}$0
+endsnippet
+
+######################################################################
+
+context "math()"
+snippet mbb "matbb environment" imA
+\symbb{$1}$0
+endsnippet
+
+######################################################################
+
+snippet mscr "mathscr environment" imA
+\symscr{$1}$0
+endsnippet
+
+######################################################################
+
+context "math()"
+snippet mfr "mathfrak environment" imA
+\symfrak{\pmb{$1}}$0
+endsnippet
+
+######################################################################
+#####################################################################
+
+context "math()"
+snippet sqrt "create a square root" imA
+\sqrt{$1}$0
+endsnippet
+
+######################################################################
+
+context "math()"
+snippet mcases "cases in math mode" imA
+${1:f(n)}=\begin{cases}
+
+ {${2:case1}}  & \text{${3:text }} ${4:cond1}\\\
+ {${5:case2}}  & \text{${6:text }} ${7:cond2}
+\end{cases}
+endsnippet
+
+#${1:\left\\{}\begin{array}{${2:ll}}
+# $3
+# \end{array}${4:\right\\}}
+# $0}
+#endsnippet
+######################################################################
+
+context "math()"
+snippet abs "absolute" imA
+\abs{$1}$0
+endsnippet
+
+######################################################################
+
+context "math()"
+snippet sum "make a summation sign" miA
+\sum_{$1}^{$2}$0
+endsnippet
+
+######################################################################
+context "math()"
+snippet Braket "first braket" miA
+\qty($1)$0
+endsnippet
+
+
+
+
+context "math()"
+snippet leftp "left and right parantheses" miA
+ \left( $1 \right)$0
+endsnippet
+
+######################################################################
+
+context "math()"
+snippet leftb "left and right square bracet" miA
+ \left[ $1 \right]$0
+endsnippet
+
+######################################################################
+
+context "math()"
+snippet leftc "left and right curly bracket" miA
+ \left\\{ $1 \right\\}$0
+endsnippet
+
+######################################################################
+
+context "math()"
+snippet bigp "left and right parantheses" miA
+ \bigl( $1 \bigr)$0
+endsnippet
+
+#######################################################::###############
+
+context "math()"
+snippet bigb "left and right square bracket" miA
+ \bigl[ $1 \bigr]$0
+endsnippet
+
+######################################################################
+
+context "math()"
+snippet bigc "left and right curly bracket" miA
+ \bigl\\{ $1 \bigr\\}$0
+endsnippet
+
+######################################################################
+
+context "math()"
+snippet biggp "left and right parantheses" miA
+ \biggl( $1 \biggr)$0
+endsnippet
+
+######################################################################
+
+context "math()"
+snippet biggb "left and right square bracket" miA
+ \biggl[ $1 \biggr]$0
+endsnippet
+
+######################################################################
+
+context "math()"
+snippet biggc "left and right curly bracket" miA
+ \biggl\\{ $1 \biggr\\}$0
+endsnippet
+
+######################################################################
+
+context "math()"
+snippet vec "vector environment" imA
+\vec{$1}$0
+endsnippet
+##################################################################################################################################
+
+post_expand "fix_indent(snip)"
+snippet bullets "itemize environment" mwA
+\begin{itemize}
+	\item$1
+\end{itemize}
+$0
+endsnippet
+
+######################################################################
+
+#post_expand "fix_indent(snip)"
+snippet item "item in itemise" bm
+\item
+endsnippet
+
+######################
+#####################
+
+snippet com4i "add a comment line" bm
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%% This is a line break for eyes %%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+endsnippet
+####################
+####################
+snippet blcom "add a comment line" bm
+%${1:blank comment} $0
+endsnippet
+######################################################################
+
+snippet tcol "text with color" im
+\textcolor{${1:SeaGreen}}{$2}$0
+endsnippet
+
+######################################################################
+
+snippet tcolb "normal text with colored background" im
+\colorbox{${1:Orchid}}{$2}$0
+endsnippet
+
+######################################################################
+
+context "math()"
+snippet ubr "underbrace" imA
+\underbrace{$1}_{${2:\textnormal{$3}}}$0
+endsnippet
+
+######################################################################
+
+context "math()"
+snippet obr "overrbrace" imA
+\overbrace{$1}^{\textnormal{$2}}$0
+endsnippet
+
+######################################################################
+
+context "math()"
+snippet lint "integral with limits" mwA
+\int\displaylimits_{$1}^{$2} $0
+endsnippet
+
+######################################################################
+
+context "math()"
+snippet int "integral without limits" mwA
+\int $0
+endsnippet
+############################################################
+priority 300
+context "math()"
+snippet dint "integral" wA
+\int_{${1:-\infty}}^{${2:\infty}} ${3:${VISUAL}} $0
+endsnippet
+
+######################################################################
+context "math()"
+snippet oint "closed line integral" wmA
+\oint\displaylimits_{$1} $0
+endsnippet
+
+######################################################################
+
+context "math()"
+snippet prd "product operator" imA
+\prod\displaylimits_{$1}^{$2} $0
+endsnippet
+
+######################################################################
+
+context "math()"
+snippet subst "substack for multiple conditions" imA
+\substack{$1 \\\ $2}$0
+endsnippet
+
+######################################################################
+
+context "math()"
+snippet pard "partial symbol" imwA
+\partial$0
+endsnippet
+
+######################################################################
+
+context "math()"
+snippet imp "implies symbol" mA
+\implies $0
+endsnippet
+
+######################################################################
+
+context "math()"
+snippet pmat "matrix parantheses" mA
+\begin{pmatrix}
+$1 ${2:&} $3 \\\
+$4 ${5:&} $6
+\end{pmatrix} $0
+endsnippet
+
+######################################################################
+
+context "math()"
+snippet bmat "matrix square brackets" mA
+\begin{bmatrix}
+$1 ${2:&} $3 \\\
+$4 ${5:&} $6
+\end{bmatrix} $0
+endsnippet
+
+######################################################################
+
+context "math()"
+snippet vmat "matrix determinant" mA
+\begin{vmatrix}
+$1 ${2:&} $3 \\\
+$4 ${5:&} $6
+\end{vmatrix} $0
+endsnippet
+
+######################################################################
+
+context "math()"
+snippet Bmat "matrix curly braces" mA
+\begin{Bmatrix}
+$1 ${2:&} $3 \\\
+$4 ${5:&} $6
+\end{Bmatrix} $0
+endsnippet
+
+######################################################################
+
+context "math()"
+snippet uset "inline mode : display limits below" mA
+\underset{${1:subscript}}{${2:maintext}}$0
+endsnippet
+
+######################################################################
+
+context "math()"
+snippet oset "inline mode : display limits over" mA
+\overset{${1:superscript}}{${2:maintext}}$0
+endsnippet
+
+######################################################################
+
+
+context "math()"
+snippet hat "put hat over symbol in math mode" miA
+\hat{$1}$0
+endsnippet
+
+######################################################################
+
+context "math()"
+snippet wat "wide hat over symbol in math mode" miA
+\widehat{$1}$0
+endsnippet
+
+######################################################################
+priority 100
+context "math()"
+snippet "([a-zA-Z])hat" "hat" riA
+\hat{`!p snip.rv=match.group(1)`}
+endsnippet
+############################################################
+context "math()"
+snippet * "product in math" mwA
+\times $0
+endsnippet
+
+######################################################################
+
+context "math()"
+snippet otime "tensor product in math" mwA
+\otimes $0
+endsnippet
+
+######################################################################
+
+context "math()"
+snippet bo* "big tensor prod in math" mwA
+\bigotimes$0
+endsnippet
+
+######################################################################
+
+
+context "math()"
+snippet to "\to" mA
+\to $0
+endsnippet
+
+######################################################################
+
+context "math()"
+snippet inf "infinity in math mode" miA
+ \infty $0
+endsnippet
+
+######################################################################
+
+context "math()"
+snippet dot "dot on symbols in math mode" mA
+\dot{$1}$0
+endsnippet
+
+######################################################################
+
+context "math()"
+snippet cdot "center dot" mwA
+\cdot$0
+endsnippet
+
+######################################################################
+
+snippet boxeq "box for equations" mA
+\begin{empheq}[box=\fcolorbox{black}{gray!30}]{align*}	
+$1
+\end{empheq}
+$0
+endsnippet
+
+######################################################################
+
+snippet boxwt "box with title" mA
+\begin{tcolorbox}${1:[title=\textbf{${2:Title}}]}
+$3
+\end{tcolorbox}
+$0
+endsnippet
+
+######################################################################
+
+context "math()"
+snippet exp "exponential" mA
+\exp \left\\{ $1 \right\\}$0
+endsnippet
+
+######################################################################
+
+#context "math()"
+#snippet d "diff" wmA
+#\diff $0
+#endsnippet
+
+######################################################################
+
+context "math()"
+snippet sin "sine in math" wm
+\sin^{$1} \left( $2 \right)$0
+endsnippet
+
+######################################################################
+
+context "math()"
+snippet cos "cosine in math" wm
+\cos^{$1} \left( $2 \right)$0
+endsnippet
+
+######################################################################
+
+context "math()"
+snippet tan "tangent in math" wm
+\tan^{$1} \left( $2 \right)$0
+endsnippet
+
+######################################################################
+
+context "math()"
+snippet sec "secant in math" wm
+\sec^{$1} \left( $2 \right)$0
+endsnippet
+
+######################################################################
+
+context "math()"
+snippet cosec "cosecant in math" wm
+\csc^{$1} \left( $2 \right)$0
+endsnippet
+
+######################################################################
+
+context "math()"
+snippet cot "cotangent in math" wmA
+\cot^{$1} \left( $2 \right)$0
+endsnippet
+
+######################################################################
+
+context "math()"
+snippet sinh "hyperbolic sine in math" wmA
+\sinh^{$1} \left( $2 \right)$0
+endsnippet
+
+######################################################################
+
+context "math()"
+snippet cosh "hyperbolic cosine in math" wmA
+\cosh^{$1} \left( $2 \right)$0
+endsnippet
+######################################################################
+
+context "math()"
+snippet tanh "hyperbolic tangent in math" wmA
+\tanh^{$1} \left( $2 \right)$0
+endsnippet
+######################################################################
+
+context "math()"
+snippet coth "hyperbolic cotangent in math" wmA
+\coth^{$1} \left( $2 \right)$0
+endsnippet
+######################################################################
+
+context "math()"
+snippet canclto "cancel to" wmA
+\cancelto{${1:label}}{${2:text}}$0
+endsnippet
+
+######################################################################
+
+context "math()"
+snippet cancel "cancel" wmA
+\cancel{$1} $0
+endsnippet
+
+######################################################################
+
+
+context "math()"
+snippet rarr "xrightarrow" wmA
+\xrightarrow[ \textnormal{${2:neeche}} ]{\textnormal{${1:upar}}}\\ $0
+endsnippet
+
+######################################################################
+
+context "math()"
+snippet larr "xleftarrow" wmA
+\xleftarrow[ \textnormal{${2:neeche}} ]{\textnormal{${1:upar}}}\\ $0
+endsnippet
+
+######################################################################
+	
+context "math()"
+snippet uparr "up arrow" wmA
+\uparrow$0
+endsnippet
+
+######################################################################
+
+context "math()"
+snippet downarr "down arrow" mwA
+\downarrow$0
+endsnippet
+
+######################################################################
+
+snippet & "& --> \&" wmA
+\& $0
+endsnippet
+
+######################################################################
+
+context "math()"
+snippet & "& --> &=" wmA
+&= $0
+endsnippet
+
+######################################################################
+
+
+
+context "math()"
+snippet lim "limit environment" imA
+\lim_{$1}$0
+endsnippet
+
+######################################################################
+
+context "math()"
+snippet sim "sim operator" imA
+\sim $0
+endsnippet
+
+######################################################################
+
+context "math()"
+snippet propto "proportional to operator" imA
+\propto $0
+endsnippet
+
+######################################################################
+
+snippet fnote "footnote" imA
+\footnote{$1} $0
+endsnippet
+
+######################################################################
+
+
+snippet incfig "include figure" imA
+\begin{figure}[ ${1:h} ]
+	\centering
+	\includegraphics[scale=${2:1.0}]{${3:file-name}}
+	\caption{${4:caption}}
+	\label{fig:$3}
+\end{figure}
+$0
+endsnippet
+
+######################################################################
+
+context "math()"
+snippet hbar "h-bar" imA 
+\hbar $0
+endsnippet
+
+######################################################################
+
+snippet Xlink "arXiv hyperlink" imA
+\href{https://arxiv.org/abs/${1:paper-number}}{arXiv:$1} $0
+endsnippet
+
+######################################################################
+
+snippet ref "reference environment" imw
+\ref{$1} $0
+endsnippet
+
+######################################################################
+
+snippet encirc "encircle stuff" imA
+\encircled{$1} $0
+endsnippet
+
+######################################################################
+
+context "math()"
+snippet comm "commutator" imwA
+\comm{$1}{$2}$0
+endsnippet
+
+context "math()"
+snippet acomm "commutator" imwA
+\acomm{$1}{$2}$0
+endsnippet
+######################################################################
+context "math()"
+snippet exval "commutator" imwA
+\expval{$1}$0
+endsnippet
+
+
+######################################################################
+
+context "math()"
+snippet log "logarithm" imwA
+\log $0
+endsnippet
+
+######################################################################
+
+context "math()"
+snippet til "wide tilde" imwA
+\widetilde{$1}$0
+endsnippet
+
+######################################################################
+
+context "math()"
+snippet wtil "wide tilde" imwA
+\widetilde{$1} $0
+endsnippet
+
+######################################################################
+
+context "math()"
+snippet det "determinant" imw
+\det $0
+endsnippet
+
+######################################################################
+
+context "math()"
+snippet bar "overhead bar" imw
+\bar{$1} $0
+endsnippet
+############################################################
+######################################################################
+
+context "math()"
+snippet Tr "trace" imw
+{\mathop\mathrm{Tr}}$0
+endsnippet
+
+######################################################################
+
+snippet table "creates a table" imw
+	
+	\begin{center}
+		\begin{tabular}{ ${1:|c|c|c|} } 
+			\hline
+			$2 & $3 & $4 \\\
+			\hline
+			$5 & $6 & $7 \\\ 
+			\hline
+			$8 & $9 & $10 \\\ 
+			\hline
+		\end{tabular}
+	\end{center} $0
+endsnippet
+
+######################################################################
+
+context "math()"
+snippet grad "gradient" imwA
+\nabla
+endsnippet
+
+######################################################################
+
+context "math()"
+snippet in "belonging-to symbol" imw
+\in $0
+endsnippet
+
+######################################################################
+
+context "math()"
+snippet forall "forall" imwA
+\forall\ $0
+endsnippet
+
+######################################################################
+
+priority 1000
+snippet math "mathematica block" w
+math $1 math$0
+endsnippet
+
+priority 10000
+snippet 'math(.*)math' "evaluate mathematica" wr
+`!p
+import subprocess
+code = 'ToString[' + match.group(1) + ', TeXForm]'
+snip.rv = subprocess.check_output(['wolframscript', '-code', code]).decode().rstrip()
+`
+endsnippet
+####################################################################
+
+snippet mbox "Box"
+`!p snip.rv = '┌' + '─' * (len(t[1]) + 2) + '┐'`
+│ $1 │
+`!p snip.rv = '└' + '─' * (len(t[1]) + 2) + '┘'`
+$0
+endsnippet
+######################################################################
+######################################################################
+
+######################################################################
+context "math()"
+snippet norm "norm" iA
+\norm{$1}$0
+endsnippet
+
+####### Pauli Matrices ################
+
+context "math()"
+snippet pauli0 "evaluated value" iA
+\smqty(\pmat{0})
+endsnippet
+
+
+context "math()"
+snippet pauli1 "evaluated value" iA
+\smqty(\pmat{0})
+endsnippet
+
+context "math()"
+snippet pauli2 "evaluated value" iA
+\smqty(\pmat{0})
+endsnippet
+
+context "math()"
+snippet pauli3 "evaluated value" iA
+\smqty(\pmat{0})
+endsnippet
+
+############################################################
+snippet vdm "Math" wA
+\[
+${1:${VISUAL}}
+.\] $0
+endsnippet
+
+##################
+snippet vali "Align" bA
+\begin{align*}
+	${1:${VISUAL}}
+.\end{align*}
+endsnippet
+############################################################
+snippet // "Fraction" iA
+\\frac{$1}{$2}$0
+endsnippet
+
+############################
+snippet '((\d+)|(\d*)(\\)?([A-Za-z]+)((\^|_)(\{\d+\}|\d))*)/' "Fraction" wrA
+\\frac{`!p snip.rv = match.group(1)`}{$1}$0
+endsnippet
+################################
+
+priority 1000
+snippet '^.*\)/' "() Fraction" wrA
+`!p
+stripped = match.string[:-1]
+depth = 0
+i = len(stripped) - 1
+while True:
+	if stripped[i] == ')': depth += 1
+	if stripped[i] == '(': depth -= 1
+	if depth == 0: break;
+	i -= 1
+snip.rv = stripped[0:i] + "\\frac{" + stripped[i+1:-1] + "}"
+`{$1}$0
+endsnippet
+##################################
+snippet ;; "Fraction" iA
+\\frac{${VISUAL}}{$1}$0
+endsnippet
